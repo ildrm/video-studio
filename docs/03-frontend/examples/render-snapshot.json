@@ -1,0 +1,110 @@
+{
+  "snapshotId": "00000009-0000-4000-8000-000000000001",
+  "workspaceId": "00000008-0000-4000-8000-000000000001",
+  "projectId": "00000001-0000-4000-8000-000000000001",
+  "revision": 7,
+  "createdAt": "2026-10-29T08:00:00Z",
+  "document": {
+    "schemaVersion": 1,
+    "projectId": "00000001-0000-4000-8000-000000000001",
+    "revision": 7,
+    "timebase": 240000,
+    "canvas": {
+      "width": 1080,
+      "height": 1920,
+      "frameRate": {
+        "num": 30000,
+        "den": 1001
+      },
+      "backgroundColor": "#000000ff",
+      "workingColorSpace": "rec709-sdr"
+    },
+    "assets": [
+      {
+        "assetId": "00000002-0000-4000-8000-000000000001",
+        "versionId": "00000003-0000-4000-8000-000000000001",
+        "kind": "video",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "status": "ready"
+      }
+    ],
+    "activeSequenceId": "00000004-0000-4000-8000-000000000001",
+    "sequences": [
+      {
+        "id": "00000004-0000-4000-8000-000000000001",
+        "durationTick": 240240,
+        "tracks": [
+          {
+            "id": "00000005-0000-4000-8000-000000000001",
+            "kind": "video",
+            "order": 0,
+            "locked": false,
+            "muted": false,
+            "solo": false,
+            "visible": true,
+            "clips": [
+              {
+                "id": "00000006-0000-4000-8000-000000000001",
+                "type": "media",
+                "assetVersionId": "00000003-0000-4000-8000-000000000001",
+                "startTick": 0,
+                "durationTick": 240240,
+                "sourceRange": {
+                  "inPts": 0,
+                  "outPts": 30030,
+                  "timeBase": {
+                    "num": 1,
+                    "den": 30000
+                  }
+                },
+                "playbackRate": {
+                  "num": 1,
+                  "den": 1
+                },
+                "sourceAudio": {
+                  "enabled": true,
+                  "gainDb": 0
+                },
+                "transform": {
+                  "x": 0,
+                  "y": 0,
+                  "scaleX": 1,
+                  "scaleY": 1,
+                  "rotationDeg": 0,
+                  "opacity": 1
+                },
+                "effects": [],
+                "keyframes": []
+              }
+            ]
+          }
+        ],
+        "transitions": [],
+        "markers": []
+      }
+    ],
+    "thumbnail": {
+      "width": 1080,
+      "height": 1920,
+      "layers": []
+    },
+    "exportPresets": [
+      {
+        "id": "portrait-sdr-mp4",
+        "version": 1
+      }
+    ]
+  },
+  "documentSha256": "b3d2fae6cca6ecd7f5326b8d2380d1c584e0cacc298fa080d45836caec883ddf",
+  "assetVersionIds": [
+    "00000003-0000-4000-8000-000000000001"
+  ],
+  "fontVersionIds": [],
+  "preset": {
+    "id": "portrait-sdr-mp4",
+    "version": 1
+  },
+  "compilerVersion": "proposal-1",
+  "workerImageDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "policyVersion": "proposal-1"
+}

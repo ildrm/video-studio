@@ -1,0 +1,7 @@
+# Business model and quotas
+
+**Status:** Proposed; no pricing commitments. **Owner:** Product and finance leads. **Related:** PLT-001, ADM-001, EXP-001, AIF-001. **Dependencies:** server-side metering and billing integration.
+
+Use an entitlement catalog separate from RBAC: plans set storage, concurrent uploads, compute, AI and export allowances; roles govern who may act. Do not grant admin permissions as a consequence of payment. Publish units, reset times, overage terms and estimated cost before a billable operation. Store plan/version effective dates so existing jobs are accounted against the rules at submission. No prices or default allowances are established until cost and market research.
+
+Reserve estimated usage atomically before job admission, reconcile measured usage on completion or failure according to disclosed policy, release unused reservation on cancel, and deduplicate records by tenant/job/attempt/metric. Capture compute seconds, output duration, persistent bytes, egress and provider usage separately; apply limits and fairness per workspace and organization. A service failure never quietly charges the user twice. Reject admission with current quota, next reset and legitimate remedies; preserve edits and offer a lower-cost setting when available. Billing administrators access invoices/quotas, not media by default. Audit changes; protect provider credentials server-side. Verify race conditions, retries, cancellations and billing-provider reconciliation before enabling charges.

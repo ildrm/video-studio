@@ -1,0 +1,5 @@
+# Backend architecture
+
+Status: proposed • Owner: backend architect • Dependencies: [service boundaries](../07-architecture/service-boundaries-and-data-flows.md).
+
+Start with a modular TypeScript API monolith backed by PostgreSQL, object storage and a durable queue, with separately isolated media and AI worker pools. Modules: identity, organizations/workspaces, authorization, projects/revisions, uploads/assets, media jobs, captions, collaboration, notifications, billing/metering and audit. Define module-owned tables and transactional interfaces; split services only after measured scaling or isolation need. A transactional outbox connects database changes to at-least-once jobs; workers are idempotent. No request handler runs untrusted FFmpeg. APIs issue narrow, short-lived object grants after authorization; workers access only their job-scoped objects. Clients receive stable error codes and never internal paths. Test cross-tenant access, job duplication and transaction failure. Performance budgets are proposed, not measured.

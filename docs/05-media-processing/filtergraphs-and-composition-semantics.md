@@ -1,0 +1,7 @@
+# Filtergraphs and composition semantics
+
+Status: proposed design; not implemented or tested. Owner: media engineering lead. Dependencies: [canonical model](../03-frontend/canonical-editor-state-and-schema.md), [feature catalog](../01-product/feature-catalog.md), [release gates](../09-delivery/phase-gates-and-definition-of-done.md).
+
+Compiler generates a typed graph from a validated snapshot. Source trims use presentation time, timestamp reset and explicit rate normalization; placement is in project ticks. Tracks are composited in stable z-order, with half-open clip and effect ranges. A gap is transparent/black by canvas policy, not a repeated last frame. Opacity and transforms are evaluated at the same project time in preview and render. Audio tracks are independently aligned, gain-adjusted, mixed and limited. Sidechain sources and silence are explicit.
+
+Transitions consume the overlapping interval; reject an overlap longer than either participating clip or unsupported pair. Graph labels and filter arguments are compiler-owned, escaped at their own grammar layer; text and subtitle data use generated, bounded files, never raw expressions. Font and shaping versions are pinned. Define an operation support table shared by preview and export; unsupported preview renders a clearly labeled approximation or server preview. Test cuts, overlap endpoints, mixed FPS, missing audio, alpha and RTL with golden fixtures. FFmpeg documents [filtergraph syntax](https://ffmpeg.org/ffmpeg-filters.html); installed filters and build options must be checked.

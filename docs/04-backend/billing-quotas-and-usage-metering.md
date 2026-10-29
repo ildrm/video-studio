@@ -1,0 +1,5 @@
+# Billing, quotas and usage metering
+
+Status: proposed • Owner: billing architect • Dependencies: [product quotas](../01-product/business-model-and-quotas.md).
+
+Billing permissions are independent from edit permissions. Meter storage bytes over time, uploaded bytes, compute seconds by tier, output bytes and provider usage with immutable source event IDs. Reserve quota atomically before upload/job, reconcile actual usage on completion, release reservation on cancellation or expiry. Retries use attempt-level cost accounting but do not double bill user operations without explicit policy. Soft limits warn; hard limits reject before costly work with actionable error. Billing provider webhooks require signature verification, replay protection and idempotent processing; internal ledger remains source for reconciliation. Pricing, refund and overage terms are open decisions. Usage records omit content and credentials; only billing-authorized users see financial detail. Test duplicate events, concurrent reservations and webhook outage.

@@ -1,0 +1,3 @@
+# Capability classification
+
+Status: proposed • Owner: product lead. There is no implemented product baseline in this repository. Everything in the feature catalog is a proposal; a documented local media-tool capability is evidence of feasibility only, not deployed behavior. Classification vocabulary: proposed core, proposed advanced, experimental, external integration, and documented technical capability. The seven-stage guided editor and professional editor are planned experiences, not existing software. Phase-0 validation must establish actual browser, codec, build and provider support; unsupported operations must fail explicitly. See [feature catalog](../01-product/feature-catalog.md) and [source register](source-audit-and-provenance.md).

@@ -1,0 +1,27 @@
+{
+  "name": "video-studio",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Browser-based video production studio",
+  "engines": {
+    "node": ">=22.18.0 <27",
+    "npm": ">=10"
+  },
+  "workspaces": [
+    "apps/api",
+    "apps/web"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @studio/web",
+    "dev:api": "npm run dev --workspace @studio/api",
+    "dev:web": "npm run dev --workspace @studio/web",
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test:compile --workspace @studio/api && npm run test --workspaces --if-present && npm run test:media",
+    "test:media": "python3 -m unittest discover -s workers/media/tests -p 'test_*.py'",
+    "test:contracts": "node docs/10-audit/validate-contracts.cjs",
+    "test:docs": "python3 docs/10-audit/validate_documentation.py",
+    "test:stack": "node scripts/verify-local-stack.mjs",
+    "migrate": "npm run migrate --workspace @studio/api"
+  }
+}

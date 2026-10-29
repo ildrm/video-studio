@@ -1,0 +1,17 @@
+# Render compiler and execution graph
+
+Status: proposed design; not implemented or tested. Owner: media engineering lead. Dependencies: [canonical model](../03-frontend/canonical-editor-state-and-schema.md), [feature catalog](../01-product/feature-catalog.md), [release gates](../09-delivery/phase-gates-and-definition-of-done.md).
+
+A render references an immutable project revision, exact asset versions, fonts, compiler/worker image digest, preset version and policy. Validate tenant access, schema, ranges, limits and capabilities before scheduling. Compile typed, allowlisted operations to an internal DAG; no browser or model string becomes shell, raw FFmpeg flags, paths or filter expressions. Execute argv without a shell, in a container with no outbound network, read-only source mounts, isolated scratch/output, CPU/memory/PID/disk quotas and wall-time. Cancellation kills the process group and deletes partial outputs. The FFmpeg process has no credentials or network. A separate supervisor stages authorized inputs and uploads outputs with short-lived scoped workload credentials; do not put object-store credentials inside the decoder sandbox.
+
+1. Resolve and fingerprint dependencies; fail missing/unauthorized assets.
+2. Decode by presentation timestamps; normalize rotation, color, frame size/rate and audio layout as required.
+3. Map half-open `[in,out)` source and timeline intervals at 240,000 integer ticks per second; retain rational FPS and source PTS in its original rational timebase. Quantize output frame boundaries from their absolute rational positions using nearest-even ties, never accumulated rounded deltas. Audio sample mapping carries rational remainders. Reject values outside the API’s safe-integer and duration limits.
+4. Build ordered clip nodes and transitions, compose visual layers, render text/captions from approved font assets, mix audio and apply mastering, encode.
+5. Probe, decode and QC in a separate stage; publish artifact only after mandatory checks; sign time-limited delivery, record retention and immutable provenance.
+
+Example: two 5-second clips with a 1-second overlap occupy `[0,1200000)` and `[960000,2160000)` ticks, yielding 9 seconds. Transition is `[960000,1200000)` and must be supported by both clips. Audio transition is explicit, not inferred from video. Stage cache key includes tenant, asset content/version, normalized operation, timebase, fonts, preset and image/version; cache authorization and retention match source. Automatic worker attempts reuse the logical job and snapshot under a new lease. An explicit user retry creates a new job with a fresh API idempotency key; reusing the old key replays the original result. Byte-identical output is not guaranteed across builds.
+
+See [FFmpeg filtergraphs](https://ffmpeg.org/ffmpeg-filters.html) and [QC](media-verification-and-quality-control.md).
+
+The [snapshot schema](../03-frontend/schemas/render-snapshot.schema.json) and [example](../03-frontend/examples/render-snapshot.json) freeze the render inputs. documentSha256 covers the immutable stored revision bytes (including its storage serialization); consumers verify those bytes rather than reserialize arbitrary JSON. The example hashes the exact project-v1.json file. Validate snapshot project/revision against its document, all resolved asset/font versions and preset against policy; schema alone cannot enforce these cross-field checks. V1 source trim uses sourceRange in stream PTS and timeBase, not project ticks.

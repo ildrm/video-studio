@@ -1,0 +1,7 @@
+# Responsive and mobile experience
+
+**Status:** Proposed. **Owner:** Mobile UX specialist. **Related:** PLT-001, PRJ-001, MED-001, EDT-001/002, EXP-001. **Dependencies:** [accessibility](accessibility.md).
+
+Desktop is the primary Pro workspace. At narrow widths, keep workspace/project identity, preview, save state and primary action visible; Quick uses one stage at a time with collapsible settings. The media library, upload resume, comments and job status remain usable on touch. Pro can offer read/review and limited selected-clip property editing initially; complex multitrack gestures and keyboard-only operations may require a larger screen. State this before entering Pro and preserve every project element. Never claim a mobile edit is saved until acknowledged.
+
+Use responsive layout, not device detection alone. Test 320 CSS px width, portrait/landscape, zoom, dynamic text, browser chrome and virtual keyboard. Tap targets aim for 44×44 CSS px with spacing. Provide alternatives to precision dragging: time entry, step controls, nudge and accessible layer list. Handle app backgrounding and interrupted upload by persisting the server upload session; browser restrictions may prevent background transfer, which must be communicated. Avoid downloading original media merely to display a proxy. Acceptance: a touch user creates a project, resumes an interrupted upload, reviews a preview and checks a render; unsupported Pro actions disclose their limits without mutating the composition.

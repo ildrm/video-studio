@@ -1,0 +1,5 @@
+# Routing and application shell
+
+Status: proposed • Owner: frontend lead • Dependencies: [navigation](../02-ux-ui/navigation-and-screen-inventory.md).
+
+Routes: `/login`, `/workspaces`, `/w/:workspaceId/projects`, `/w/:workspaceId/projects/:projectId/edit`, `/w/:workspaceId/assets`, `/w/:workspaceId/settings`, `/share/:token`. Quick/Pro mode is editor UI state, not a different project. Auth middleware verifies session; backend checks every resource. Deep links preserve selection only if authorized. Shell provides workspace switcher, save state, notifications, account menu, skip links and focus restoration. Loading skeletons must not expose stale tenant data. An expired session retains in-memory edits during reauthentication under the same account; optional local recovery follows the explicit cache policy in [state management](state-management-autosave-and-undo.md); denied routes render a non-enumerating error. Mobile uses review and simple actions; complex timeline operations require accessible desktop controls. Acceptance: reload and navigation retain context, and workspace switch clears cached private data.

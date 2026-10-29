@@ -1,0 +1,5 @@
+# Deployment architecture
+
+Status: proposed • Owner: platform architect • Dependencies: [security](security-threat-model-and-sandboxing.md).
+
+Use managed load balancing and TLS, application containers across availability zones, managed PostgreSQL with tested backups, private object storage, durable queue and autoscaled isolated worker pools. API, CPU media, optional GPU, and AI adapters have separate scaling and service identities. Workers have no inbound network, restricted egress, read-only root filesystem, resource limits and ephemeral scratch. Separate development, staging and production accounts, data and keys. Infrastructure as code provisions private subnets, workload identities, secret store and observability. Deploy additive schema first, compatible workers/readers second, API/web third, and enable new job formats last after capability checks; canary and roll back via feature flags. GPU build and regional topology are feasibility decisions. DR is a measured restore exercise, not a promise of availability.

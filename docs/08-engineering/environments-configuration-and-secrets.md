@@ -1,0 +1,9 @@
+# Environments, configuration and secrets
+
+**Status:** proposed. **Owner:** platform engineer; security reviews. **Scope:** development through production. **Dependencies:** tenancy and infrastructure decisions.
+
+Separate local, integration, staging and production accounts, identities, buckets, databases, queues, keys and provider projects; prohibit production media in developer environments unless explicitly approved and redacted. Staging uses synthetic licensed fixtures and production-like controls. Infrastructure is declarative and peer reviewed; each environment has a documented region, retention, quotas and cost ceiling.
+
+Configuration is validated at startup against a typed schema, with required environment, storage, queue, issuer, resource limits and worker capability versions. Sensitive values come from a managed secrets service and workload identities; never commit them or send them to the browser. Signed URLs are scoped to a resource, action and short configurable expiration. Rotation supports overlapping old/new credentials, canary verification, revocation and audit; emergency rotation is exercised. Separate customer provider credentials, if supported, under envelope encryption and restricted service access. No key values in logs or support tickets.
+
+Production access is time-bound, least privilege and audited; support access requires a documented authorized reason. Disable remote shell and outbound worker networking by default. Maintain break-glass identities with separate custody and alerting. Validate all runtime settings before traffic, and test a missing secret, invalid issuer and expired credential without leaking values. **Acceptance:** staging rotation and restoration succeed; an unintended environment cannot read another environment's resources. **Risk:** residency and secrets vendor remain open.

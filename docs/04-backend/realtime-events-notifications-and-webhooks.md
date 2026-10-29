@@ -1,0 +1,9 @@
+# Realtime events, notifications and webhooks
+
+Status: proposed • Owner: backend lead • Related: PLT-003, EXP-001, COL-002. Dependencies: [jobs](job-queues-workers-and-render-orchestration.md), [OpenAPI](openapi.yaml).
+
+`GET .../jobs/{jobId}/events` returns a typed paginated JSON EventPage. `GET .../jobs/{jobId}/events/stream` returns text/event-stream and uses the same session cookie; native EventSource is not assumed to support arbitrary authorization headers. Keep the stream same-origin, use no bearer token in query strings, validate current permission before subscribing and periodically thereafter. On membership change actively close streams. Reconnect carries Last-Event-ID; expired replay history returns 410, then client refetches Job and starts a new subscription. Bound event retention and buffers; coalesce high-frequency progress without dropping durable state transitions.
+
+Envelope: eventId, monotonic sequence per job, type, resourceId, occurredAt and typed Job payload. Delivery is at least once. Client deduplicates and resynchronizes on gaps; GET Job is authoritative. Never assume state order is monotonic because retries return to queued. Notification is a separate persisted resource with deduplication key `(userId,jobId,terminalEventId)` and user preference policy.
+
+Later webhooks require independently reviewed contracts: HTTPS destination and DNS/IP validation at registration and every connection/redirect, private/reserved address denial, egress gateway, bounded redirects, HMAC timestamp signatures, rotating secrets, retry limits and event deduplication. No signed URLs or content in webhook payload. Read access revoked means future reads denied; URL grants already issued follow their own TTL. Acceptance: reconnect, duplicate, gap, access revocation and expired cursor tests. Technical reference: [EventSource](https://developer.mozilla.org/en-US/docs/Web/API/EventSource).

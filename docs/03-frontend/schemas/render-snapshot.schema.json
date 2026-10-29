@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Immutable render snapshot v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "snapshotId",
+    "workspaceId",
+    "projectId",
+    "revision",
+    "createdAt",
+    "document",
+    "documentSha256",
+    "assetVersionIds",
+    "fontVersionIds",
+    "preset",
+    "compilerVersion",
+    "workerImageDigest",
+    "policyVersion"
+  ],
+  "properties": {
+    "snapshotId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "workspaceId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "projectId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "document": {
+      "$ref": "project-v1.schema.json"
+    },
+    "documentSha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "assetVersionIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      },
+      "uniqueItems": true
+    },
+    "fontVersionIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      },
+      "uniqueItems": true
+    },
+    "preset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "compilerVersion": {
+      "type": "string"
+    },
+    "workerImageDigest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "policyVersion": {
+      "type": "string"
+    }
+  }
+}

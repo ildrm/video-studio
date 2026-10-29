@@ -1,0 +1,9 @@
+# API contract and integration testing
+
+**Status:** proposed. **Owner:** backend lead; security and QA review. **Dependencies:** canonical OpenAPI contract, project schema and tenancy model.
+
+Validate the OpenAPI document in CI, then generate boundary tests for request and response schemas, status codes, error envelope, pagination and authentication. Contract examples are tested against a running service, not just parsed. For each endpoint test missing, malformed and expired credentials; each role's allow and deny decisions; cross-workspace object IDs; revoked membership; and share-link scope and expiry. Check 400/validation, 401 unauthenticated, 403 denied, 404 inaccessible or absent according to the API policy, 412 stale If-Match, 428 missing precondition, 409 idempotency/state collision, 429 quota/rate limit and retryable 5xx. Responses must not disclose another tenant's existence or secrets.
+
+Use disposable PostgreSQL and object storage instances. Exercise create project → upload session → multipart resume → finalize → inspect → save revision → request render → status events → verify artifact → authorized download. Test duplicate idempotency keys with identical versus different payloads, asynchronous timeout and replay, worker crash after output upload but before DB commit, and immutable snapshot under subsequent project edits. Verify webhook signatures, timestamp freshness and replay handling when webhooks are enabled. Simulate provider errors and require typed sanitized errors; no live provider needed in ordinary CI. Separate destructive restore/load environments from normal CI.
+
+**Acceptance:** schema-valid success and error responses, at-most-one published artifact per logical job, tenant isolation and reproducible integration report. Capture version, fixture digest and service build. Contract tests supplement, not replace, security review.

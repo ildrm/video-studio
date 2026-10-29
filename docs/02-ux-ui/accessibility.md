@@ -1,0 +1,7 @@
+# Accessibility
+
+**Status:** Proposed target; not a compliance claim. **Owner:** Accessibility specialist. **Related:** all features. **Dependencies:** [keyboard and gestures](keyboard-shortcuts-and-gestures.md), [component states](component-library-and-states.md).
+
+Target WCAG 2.2 AA for supported workflows; validate against current normative requirements and actual implementation. Every control has an accessible name, role, state and visible focus. Use semantic HTML and label inputs, error descriptions and dialog titles. Timeline and canvas require non-pointer alternatives: selectable track/clip list, start/end fields, nudge, layer order, playback and seek. Timecode is available as text; waveform/color alone cannot carry meaning. Announce asynchronous job state politely without repeated progress spam, and critical errors assertively only when needed. Restore focus after dialogs and preserve it on rerender.
+
+Provide caption editing, transcript text, adequate contrast, resize/reflow, reduced motion, high contrast, locale-aware reading order and keyboard-accessible modal escape. Text alternatives describe visual output and status without exposing private data. Automated scans are insufficient: test keyboard only, screen readers on supported browsers, magnification, voice input and touch with representative users. Record defects by severity and block release for inaccessible critical paths. Acceptance: a keyboard/screen-reader user can upload, edit timing through fields, save, start render, understand success/failure and download without a pointer.

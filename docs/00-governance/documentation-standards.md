@@ -1,0 +1,9 @@
+# Documentation standards
+
+Status: proposed • Owner: documentation architect. This repository specifies a new product; no application implementation is asserted. Documents use proposed status, owner, scope, dependencies, concrete behavior, acceptance and security implications. Feature IDs are defined once in the [catalog](../01-product/feature-catalog.md); phases and acceptance tests live in [delivery](../09-delivery/acceptance-test-catalog.md). Treat uncertain facts as assumptions, decisions as proposed until approved, and measured results as evidence only when reproducible. Record source, date, version and confidence. Changes to schema, permissions or contracts require cross-functional review and link/traceability checks. Review quarterly and at every release.
+
+## Canonical contract precedence
+
+The [project JSON Schema](../03-frontend/schemas/project-v1.schema.json) defines supported v1 structure; [timeline semantics](../03-frontend/timeline-model-and-editing-commands.md) define arithmetic and cross-field constraints; [permission rules](../01-product/user-roles-and-permissions.md) define grants; [NFR register](../01-product/non-functional-requirements.md) defines proposed numeric targets; [job state table](../04-backend/job-queues-workers-and-render-orchestration.md) defines transitions. OpenAPI references the schema. A contradiction is a defect to repair, not permission to silently choose a document. Later feature-family prose does not extend a schema or bypass a phase gate.
+
+Run the [offline integrity checker](../10-audit/validate_documentation.py), [contract checks](../10-audit/validate-contracts.cjs) and an OAS 3.1 validator after contract changes. See the [review report](../10-audit/review-findings-and-fixes.md) for commands and evidence. Application acceptance cases are proposed until implemented and executed.

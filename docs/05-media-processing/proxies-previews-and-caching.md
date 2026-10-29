@@ -1,0 +1,7 @@
+# Proxies, previews and caching
+
+Status: proposed design; not implemented or tested. Owner: media engineering lead. Dependencies: [canonical model](../03-frontend/canonical-editor-state-and-schema.md), [feature catalog](../01-product/feature-catalog.md), [release gates](../09-delivery/phase-gates-and-definition-of-done.md).
+
+Create bounded, lower-resolution CFR proxies after ingest, with audio and a stored source-PTS mapping. Proxies are disposable tenant-scoped derivatives, not replacements for immutable originals. Browser preview uses the same timeline semantics but may differ in decoder, text shaping, color and effects; label unsupported effects and offer server-rendered preview. No export is sourced from proxies unless user deliberately selects a low-quality draft.
+
+Key derivatives by tenant, source hash/version, generation settings, PTS mapping and worker image. Authorize before lookup and delivery; use short-lived URLs, encrypted storage, retention, reference counts and deletion propagation. Never share across tenants by hash alone. Invalidate for source or tool version changes. Establish preview resolution, memory and latency targets only after benchmarks across representative devices, source duration, VFR, mixed FPS, effects and concurrent users; record measured distributions, dropped frames, cache hits, queue wait, CPU, RAM and egress. Throttle generation under load and bound scratch storage.

@@ -1,0 +1,7 @@
+# Audio processing and mastering
+
+Status: proposed design; not implemented or tested. Owner: media engineering lead. Dependencies: [canonical model](../03-frontend/canonical-editor-state-and-schema.md), [feature catalog](../01-product/feature-catalog.md), [release gates](../09-delivery/phase-gates-and-definition-of-done.md).
+
+Represent dialogue, music and effects as independently timed tracks with per-clip gain, fades, pan, mute/solo and channel layout. Resolve sample rate and layout deliberately, align with video by project time, apply typed dynamics, then mix in a defined order. Sidechain ducking references an authorized dialogue bus and includes threshold, attack and release; avoid hidden gain changes. Silence is explicit; never infer that a missing audio stream is an error when silent video is intended.
+
+Loudness normalization is an opt-in preset operation: measure integrated loudness, loudness range and true peak, apply a second pass when applicable, remeasure the encoded result, and report deviations or short/ silent-program limitations. Preset targets are versioned, user-visible configuration, not universal platform requirements. The [FFmpeg loudnorm filter](https://ffmpeg.org/ffmpeg-filters.html#loudnorm) documents single- and double-pass modes. Test clipping, channel mapping, clicks at cuts, dropout, sidechain, long files and lossy-encode true-peak overshoot. High compute/cost and no-speech inputs return clear errors or warnings.

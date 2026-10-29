@@ -1,0 +1,20 @@
+# Dependencies and generated artifacts
+node_modules/
+.next/
+dist/
+coverage/
+*.tsbuildinfo
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+
+# Local environment and private media
+.env
+.env.*
+!.env.example
+var/
+storage/
+tmp/
+*.log
+.DS_Store

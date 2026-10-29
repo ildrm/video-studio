@@ -1,0 +1,13 @@
+# An explicitly invoked media process, with no cloud credentials.
+FROM python:3.12-slim-bookworm
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core \
+    && rm -rf /var/lib/apt/lists/* \
+    && useradd --uid 1000 --create-home studio \
+    && mkdir -p /work \
+    && chown studio:studio /work
+WORKDIR /app
+COPY --chown=studio:studio workers/media ./workers/media
+USER studio
+ENV MEDIA_WORK_ROOT=/work FFMPEG_PATH=/usr/bin/ffmpeg FFPROBE_PATH=/usr/bin/ffprobe
+ENTRYPOINT ["python3", "workers/media/media_worker.py"]

@@ -1,0 +1,24 @@
+.captionPanel { min-width: 0; }
+.captionForm { display: grid; gap: 12px; padding: 16px 0; }
+.captionForm label { display: grid; gap: 6px; font-size: 12px; color: var(--soft); }
+.captionForm input, .captionForm textarea, .captionForm select { width: 100%; min-width: 0; padding: 9px; border: 1px solid var(--line); border-radius: 7px; background: var(--panel); color: var(--text); font: inherit; }
+.captionForm input[type=color] { padding: 3px; height: 36px; }
+.captionForm small { font-size: 11px; line-height: 1.6; color: var(--muted); }
+.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.cueList { display: grid; gap: 6px; padding: 0; max-height: 240px; overflow: auto; }
+.cueRow { display: flex; gap: 4px; align-items: center; }
+.cueButton { display: grid; gap: 5px; text-align: start; background: var(--raised); border: 1px solid transparent; border-radius: 7px; padding: 10px; flex: 1; min-width: 0; cursor: pointer; }
+.cueButton[aria-pressed=true] { border-color: #b6cd81; background: #303a2b; }
+.cueButton strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; }
+.cueButton small { color: var(--muted); font-size: 10px; }
+.recovery { padding: 10px 20px; background: var(--panel); border-block-end: 1px solid var(--line); font-size: 12px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.recovery label { display: flex; gap: 7px; align-items: center; }
+.recovery p { margin: 0; flex: 1; min-width: 200px; }
+.captionPreview { position: absolute; inset: 0; pointer-events: none; overflow: hidden; width: 100%; height: 100%; }
+.previewFrame { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+.previewFrame video { width: 100%; height: 100%; object-fit: contain; }
+
+.captionForm textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.recovery input { min-height: 16px; width: 16px; height: 16px; margin: 0; }
+
+.previewActions, .exportActions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 11px; }

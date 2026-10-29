@@ -1,0 +1,5 @@
+# Privacy, retention and data governance
+
+Status: proposed • Owner: privacy engineer • Dependencies: [storage](../04-backend/media-storage-and-lifecycle.md).
+
+Classify originals, derivatives, transcripts, generated artifacts, telemetry and audit logs separately; collect minimal metadata. Record processing purpose, provider and region; AI provider transfer requires user/workspace policy and contractual review. No content is used for provider training without explicit agreement. Retention is configurable with defaults to be set by legal and product; deletion marks resources, revokes access, cancels work, then purges object versions, derivatives and backups according to documented schedules and holds. Membership revocation cannot revoke already issued URLs before expiry. Export and deletion requests require identity verification; track completion, exceptions and legal holds. Minimize telemetry, restrict support access and maintain audit trail without media text or tokens. Validate actual legal obligations and regional transfer arrangements before launch; no compliance is asserted.

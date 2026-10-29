@@ -1,0 +1,7 @@
+# Captions, graphics and compositing
+
+Status: proposed design; not implemented or tested. Owner: media engineering lead. Dependencies: [canonical model](../03-frontend/canonical-editor-state-and-schema.md), [feature catalog](../01-product/feature-catalog.md), [release gates](../09-delivery/phase-gates-and-definition-of-done.md).
+
+Store timed cue text, language, style and word intervals independently of a burn-in. Export sidecar captions or burn into a picture by explicit choice. Text is data, not markup or filter syntax: sanitize/escape generated subtitle files, cap length and resolve approved fonts. Define typography, wrap, shaping, outline, safe-area and z-order in canonical canvas coordinates. Preserve RTL reading order and test Arabic shaping, bidirectional text, emoji, fallback fonts and line breaks on actual worker and browser builds.
+
+Graphics and logos use immutable tenant assets, explicit opacity, transform, time interval and stacking. Alpha and premultiplication need a documented color-space rule. Version destination safe areas and present them as guides, not guarantees. Caption timings are mapped through edits and speed changes; highlight stale or overlapping cues for review. Compare representative frames against preview and inspect sidecar parsing and burn-in legibility. FFmpeg's [drawtext documentation](https://ffmpeg.org/ffmpeg-filters.html#drawtext) identifies build-dependent text shaping prerequisites.

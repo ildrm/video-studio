@@ -1,0 +1,7 @@
+# Color, HDR and reframing
+
+Status: proposed design; not implemented or tested. Owner: media engineering lead. Dependencies: [canonical model](../03-frontend/canonical-editor-state-and-schema.md), [feature catalog](../01-product/feature-catalog.md), [release gates](../09-delivery/phase-gates-and-definition-of-done.md).
+
+Record primaries, transfer, matrix, range, bit depth, rotation, mastering metadata and uncertainty during probe. Untagged or contradictory material requires a user-visible interpretation choice; do not relabel a signal as a conversion. A defined SDR output must convert pixels and metadata through an explicit tone-mapping pipeline. Preserve HDR only with validated decode, composition, encoder and metadata support; reject unsupported dynamic metadata rather than imply fidelity. Mixed HDR/SDR and alpha need an explicit working space and tested blending.
+
+Aspect fit offers crop, letterbox and background fill; crop coordinates are normalized to the oriented source. A subject-tracking suggestion produces editable keyframes with confidence, not an automatic guarantee. Use safe-area overlays and review contact sheets at start, middle, cut and end. Test known color bars, SDR/HDR reference clips, rotated phone footage, skin tones, crop limits and metadata. No hardware or tone-mapping implementation is assumed available; inspect FFmpeg build and conduct visual evaluation before release.

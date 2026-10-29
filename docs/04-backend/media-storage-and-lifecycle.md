@@ -1,0 +1,5 @@
+# Media storage and lifecycle
+
+Status: proposed • Owner: storage engineer • Depends on [ingestion](upload-ingestion-and-processing.md).
+
+Use private S3-compatible object storage with server-generated opaque tenant/asset/version keys; originals immutable, derived proxies, waveform, thumbnails and outputs separately classified. Never derive paths from filenames. Encrypt in transit and at rest; scope temporary signed URLs to object, operation and short expiry; redact URL query strings. Lifecycle: pending upload → inspected original → derivatives → referenced by revisions → retention hold → garbage collection after grace period. Deleting project does not delete shared assets; GC traces retained revisions, active jobs, legal holds and artifact retention before deleting. Multipart uploads are aborted after expiry; worker scratch is encrypted/ephemeral and cleaned on timeout. Back up metadata and required object versions; periodically restore and reconcile checksums. Region and retention durations are legal/product decisions. Acceptance: revoked access cannot mint new URLs; GC never removes referenced source; existing signed links expire according to documented TTL.

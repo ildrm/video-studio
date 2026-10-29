@@ -1,0 +1,152 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Build and integration tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:17-alpine
+        # This credential is only for this disposable CI service container.
+        env:
+          POSTGRES_DB: studio_ci
+          POSTGRES_USER: studio_ci
+          POSTGRES_PASSWORD: studio-ci-ephemeral
+        ports:
+          - 5432/tcp
+        options: >-
+          --health-cmd="pg_isready -U studio_ci -d studio_ci"
+          --health-interval=5s
+          --health-timeout=3s
+          --health-retries=20
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22.18.0
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install locked dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Check production dependency advisories
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Type-check the applications
+        run: npm run typecheck
+
+      - name: Validate documentation and schema contracts
+        run: |
+          npm run test:docs
+          npm run test:contracts
+
+      - name: Build API and web application
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'
+        run: npm run build
+
+      - name: Run web unit tests
+        run: npm run test --workspace @studio/web
+
+      - name: Ensure media tools are available
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core
+          ffmpeg -version >/dev/null
+          ffprobe -version >/dev/null
+
+      - name: Create a synthetic, tagged media fixture
+        run: |
+          ffmpeg -hide_banner -loglevel error \
+            -f lavfi -i 'color=c=red:s=160x90:r=30:d=2' \
+            -f lavfi -i 'sine=frequency=440:sample_rate=48000:duration=2' \
+            -c:v libx264 -pix_fmt yuv420p \
+            -x264-params 'colorprim=bt709:transfer=bt709:colormatrix=bt709' \
+            -c:a aac -t 2 -y "$RUNNER_TEMP/studio-ci-fixture.mp4"
+          ffprobe -v error -show_streams "$RUNNER_TEMP/studio-ci-fixture.mp4" >/dev/null
+          ffmpeg -hide_banner -loglevel error \
+            -f lavfi -i 'sine=frequency=880:sample_rate=48000:duration=2' \
+            -c:a pcm_s16le -y "$RUNNER_TEMP/studio-ci-audio.wav"
+
+      - name: Run worker tests with real FFmpeg
+        run: python3 -m unittest discover -s workers/media/tests -p 'test_*.py' -v
+
+      - name: Compile API integration tests
+        run: npm run test:compile --workspace @studio/api
+
+      - name: Migrate disposable database
+        env:
+          DATABASE_URL: postgresql://studio_ci:studio-ci-ephemeral@127.0.0.1:${{ job.services.postgres.ports[5432] }}/studio_ci
+        run: npm run migrate --workspace @studio/api
+
+      - name: Run API integration tests, including media round trip
+        env:
+          TEST_DATABASE_URL: postgresql://studio_ci:studio-ci-ephemeral@127.0.0.1:${{ job.services.postgres.ports[5432] }}/studio_ci
+          TEST_MEDIA_FIXTURE: ${{ runner.temp }}/studio-ci-fixture.mp4
+          TEST_AUDIO_FIXTURE: ${{ runner.temp }}/studio-ci-audio.wav
+          TEST_AUDIO_MIX: 'true'
+          TEST_CAPTIONS: 'true'
+          FONT_PATH: /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf
+          FONT_LICENSE_PATH: /usr/share/doc/fonts-dejavu-core/copyright
+        run: npm run test --workspace @studio/api
+
+      - name: Validate Compose configuration
+        # These values exist solely for config parsing and are not deployment credentials.
+        env:
+          POSTGRES_PASSWORD: ci-config-only-password
+          SESSION_SECRET: ci-config-only-secret-not-for-production
+        run: docker compose --profile tools config --quiet
+
+      - name: Build application and diagnostic worker images
+        env:
+          COMPOSE_PROJECT_NAME: studio-ci
+          POSTGRES_PASSWORD: ci-config-only-password
+          SESSION_SECRET: ci-config-only-secret-not-for-production
+        run: docker compose --profile tools build api web media-worker
+
+      - name: Test packaged worker with restricted filesystem
+        env:
+          COMPOSE_PROJECT_NAME: studio-ci
+          POSTGRES_PASSWORD: ci-config-only-password
+          SESSION_SECRET: ci-config-only-secret-not-for-production
+        run: docker compose --profile tools run --rm --no-deps --entrypoint python3 media-worker -m unittest discover -s workers/media/tests -p 'test_*.py'
+
+      - name: Verify full stack through the web HTTP interface
+        env:
+          COMPOSE_PROJECT_NAME: studio-ci
+          POSTGRES_PASSWORD: ci-config-only-password
+          SESSION_SECRET: ci-config-only-secret-not-for-production
+          AUTH_LOCAL_ENABLED: 'true'
+          MEDIA_LOCAL_ENABLED: 'true'
+          WEB_PORT: '3001'
+          API_PORT: '4001'
+          POSTGRES_PORT: '55433'
+          APP_ORIGIN: http://localhost:3001
+          VERIFY_BASE_URL: http://localhost:3001
+          VERIFY_MEDIA_FIXTURE: ${{ runner.temp }}/studio-ci-fixture.mp4
+        run: |
+          docker compose up -d --wait --wait-timeout 180 db api web
+          npm run test:stack
+
+      - name: Remove disposable full-stack test services
+        if: always()
+        env:
+          COMPOSE_PROJECT_NAME: studio-ci
+          POSTGRES_PASSWORD: ci-config-only-password
+          SESSION_SECRET: ci-config-only-secret-not-for-production
+        run: docker compose --profile tools down --volumes --remove-orphans

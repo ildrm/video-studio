@@ -1,0 +1,7 @@
+# Localization and RTL
+
+**Status:** Proposed. **Owner:** Localization specialist. **Related:** PLT-001, CAP-001, GFX-001, THM-001. **Dependencies:** [tokens](design-system-and-tokens.md), [accessibility](accessibility.md).
+
+English is the initial source locale. All visible strings, validation, plural rules, dates, numbers and units use locale-aware message catalogs; content language is distinct from UI locale and project frame/time settings. Use Unicode-safe text, explicit language and direction for user content and isolation for mixed-direction names/timecodes. Use logical layout properties and test Arabic and Persian examples, punctuation, numbers, long labels and bidirectional captions. Do not mechanically reverse timeline time or playback semantics: time still increases in its documented direction, with explicit labels and keyboard behavior. Mirror directional navigation icons where semantically appropriate, not brand marks or media.
+
+Font fallback and shaping for preview, server render and thumbnail must be tested for each supported script; report missing glyphs and unsupported font licenses instead of silently substituting. Captions preserve language, timing and editable Unicode text. Locale changes do not rewrite project content. Acceptance: an RTL user can navigate, edit a mixed-language cue, inspect timecodes, preview and export without reordering text or clipping controls; verify both browser and server output. Available languages remain an open product and translation-quality decision.

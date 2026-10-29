@@ -1,0 +1,7 @@
+# Trimming, transitions, speed and effects
+
+Status: proposed design; not implemented or tested. Owner: media engineering lead. Dependencies: [canonical model](../03-frontend/canonical-editor-state-and-schema.md), [feature catalog](../01-product/feature-catalog.md), [release gates](../09-delivery/phase-gates-and-definition-of-done.md).
+
+Trim specifies source `[in,out)` and a timeline placement; edits are non-destructive. Frame-exact video and sample-exact audio need decode/re-encode; packet copy can snap to keyframes and is permitted only if its precision is disclosed and meets the request. Speed mapping is a monotonic piecewise rational function; source duration and timeline duration differ. Reverse and freeze need explicit source mappings and bounded memory. Quantize at output boundaries once and test fractional rates such as 30000/1001.
+
+Transitions require bounded overlap and explicit video/audio behavior; distinguish dissolve from audio crossfade. Effects are typed, finite, allowlisted and versioned with ordered application. Clamp parameters; reject missing dependencies and unsupported combinations instead of silently dropping effects. Provide before/after preview and undo; test endpoints, zero duration, VFR, audio phase, reverse, transition duration and high-resolution memory limits. [Filter documentation](https://ffmpeg.org/ffmpeg-filters.html) is a component reference, not proof of support in a deployment.

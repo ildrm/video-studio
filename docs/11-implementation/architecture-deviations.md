@@ -1,0 +1,17 @@
+# Architecture deviations
+
+Status: **open** • Owner: architecture/security leads • Compared with [system boundaries](../07-architecture/service-boundaries-and-data-flows.md), [identity and tenancy](../04-backend/authentication-authorization-and-tenancy.md), [storage](../04-backend/media-storage-and-lifecycle.md), and [jobs](../04-backend/job-queues-workers-and-render-orchestration.md).
+
+| Area | Actual local implementation | Intended direction / impact | Next action |
+|---|---|---|---|
+| Identity | Opt-in local password registration, scrypt hashes, local cookies; accounts remain email-unverified. Production mode refuses startup. | OIDC/verified identity, recovery and MFA are not implemented. | Integrate an approved identity provider and server-side session policy; test revocation and recovery. |
+| Authorization | Workspace-owner checks and scoped resources; no complete project-role/sharing hierarchy. | Planned workspace/project roles and least-privilege sharing are broader. | Implement role grants, scoped membership, audit and adversarial tenant tests. |
+| Storage | Local filesystem with PostgreSQL metadata, local grants and authenticated range delivery. | Private object storage, scoped short-lived object grants, lifecycle and multi-region backup are absent. | Add a storage adapter with immutable versions, retention, cleanup and capability-scoped delivery. |
+| Upload recovery | Server keeps parts/session and browser can retry while the current attempt remains in memory. | No persisted browser recovery across reload, full resumable UI or distributed upload storage. | Persist safe session metadata, require file re-selection/hash check, test interruption and cleanup. |
+| Queue/worker | PostgreSQL rows, leases and a development-only in-process supervisor invoke a one-shot child. | No separate durable distributed queue/outbox, production sandbox, fair admission or robust multi-instance operation. | Move jobs to isolated workers; enforce per-job credentials, network/resource limits, fencing, retry and GC. |
+| Preview/derivatives | Original media is streamed to the browser; video thumbnail and playback of a rendered revision exist. | Proxies, waveform, live composition preview and authoritative color/transition parity do not exist. | Add versioned derived assets and preview support with explicitly measured fidelity. |
+| Editor | One constrained video track and selected clip controls; unsupported states are protected or rejected; an isolated worker can mix limited extra audio. | Full nonlinear timeline, two complete modes and comprehensive shared commands remain. | Expand schema/compiler and interaction support before exposing operations. |
+| AI, sharing, billing | No configured AI providers, collaborative review/publishing, billing or subscription system. | These need contracts, access control, data policies and integration tests. | Implement only after provider/legal/security design and prerequisites. |
+| Deployment | Compose, non-root images and a CI workflow exist; an isolated local build/start and web-to-API routing smoke passed. | No audited cloud deployment, secrets rotation, monitoring/alerting, tested backup/restore or release pipeline. | Verify complete container media workflows and isolation; then design and test production infrastructure. |
+
+The API rejects `NODE_ENV=production`; do not disable this guard to bypass missing security work. A network-disabled diagnostic worker image does not isolate the API's embedded development supervisor.
